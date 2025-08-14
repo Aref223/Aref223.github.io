@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visa and Debit Card Scraper</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+    
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-credit-card"></i>
+                Visa & Debit Card Scraper
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#dashboard" data-page="dashboard">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#scraping" data-page="scraping">
+                            <i class="bi bi-search"></i> Scraping
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#validation" data-page="validation">
+                            <i class="bi bi-check-circle"></i> Validation
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#cards" data-page="cards">
+                            <i class="bi bi-credit-card-2-front"></i> Cards
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#jobs" data-page="jobs">
+                            <i class="bi bi-list-task"></i> Jobs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#users" data-page="users">
+                            <i class="bi bi-people"></i> Users
+                        </a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i>
+                            <span id="currentUser">Guest</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#profile" data-page="profile">
+                                <i class="bi bi-person"></i> Profile
+                            </a></li>
+                            <li><a class="dropdown-item" href="#settings" data-page="settings">
+                                <i class="bi bi-gear"></i> Settings
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container-fluid mt-4">
+        <!-- Login Page -->
+        <div id="loginPage" class="page-content">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h4><i class="bi bi-lock"></i> Login</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="loginForm">
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="username" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" required>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-box-arrow-in-right"></i> Login
+                                    </button>
+                                </div>
+                            </form>
+                            <hr>
+                            <div class="text-center">
+                                <a href="#" id="showRegister">Don't have an account? Register</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Page -->
+        <div id="registerPage" class="page-content" style="display: none;">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow">
+                        <div class="card-header bg-success text-white text-center">
+                            <h4><i class="bi bi-person-plus"></i> Register</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="registerForm">
+                                <div class="mb-3">
+                                    <label for="regUsername" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="regUsername" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="regEmail" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="regEmail" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="regPassword" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="regPassword" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="regConfirmPassword" class="form-label">Confirm Password</label>
+                                    <input type="password" class="form-control" id="regConfirmPassword" required>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="bi bi-person-plus"></i> Register
+                                    </button>
+                                </div>
+                            </form>
+                            <hr>
+                            <div class="text-center">
+                                <a href="#" id="showLogin">Already have an account? Login</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboardPage" class="page-content" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <h2><i class="bi bi-speedometer2"></i> Dashboard</h2>
+                    <hr>
+                </div>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="card-title">Total Cards</h6>
+                                    <h3 id="totalCards">0</h3>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-credit-card fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="card-title">Valid Cards</h6>
+                                    <h3 id="validCards">0</h3>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-check-circle fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="card-title">Active Jobs</h6>
+                                    <h3 id="activeJobs">0</h3>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-list-task fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="card-title">Validations</h6>
+                                    <h3 id="totalValidations">0</h3>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-shield-check fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-pie-chart"></i> Card Types Distribution</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="cardTypesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-graph-up"></i> Recent Activity</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="activityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-clock-history"></i> Recent Activity</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="recentActivity" class="list-group list-group-flush">
+                                <!-- Activity items will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scraping Page -->
+        <div id="scrapingPage" class="page-content" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <h2><i class="bi bi-search"></i> Web Scraping</h2>
+                    <hr>
+                </div>
+            </div>
+
+            <!-- Quick Scraping -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-lightning"></i> Quick Scraping</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="quickScrapingForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="scrapingUrls" class="form-label">Target URLs (one per line)</label>
+                                            <textarea class="form-control" id="scrapingUrls" rows="4" placeholder="https://example.com/page1&#10;https://example.com/page2"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="cardTypes" class="form-label">Card Types</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="visa" id="visaCheck" checked>
+                                                <label class="form-check-label" for="visaCheck">Visa</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="debit" id="debitCheck" checked>
+                                                <label class="form-check-label" for="debitCheck">Debit</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="mastercard" id="mastercardCheck">
+                                                <label class="form-check-label" for="mastercardCheck">Mastercard</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="amex" id="amexCheck">
+                                                <label class="form-check-label" for="amexCheck">American Express</label>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="maxCards" class="form-label">Max Cards to Find</label>
+                                            <input type="number" class="form-control" id="maxCards" min="1" max="1000" value="100">
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="enableValidation" checked>
+                                            <label class="form-check-label" for="enableValidation">Enable Validation</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-search"></i> Start Scraping
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scraping Jobs -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5><i class="bi bi-list-task"></i> Scraping Jobs</h5>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createJobModal">
+                                <i class="bi bi-plus"></i> Create Job
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="scrapingJobsList">
+                                <!-- Jobs will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Validation Page -->
+        <div id="validationPage" class="page-content" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <h2><i class="bi bi-check-circle"></i> Card Validation</h2>
+                    <hr>
+                </div>
+            </div>
+
+            <!-- Single Card Validation -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-credit-card"></i> Single Card Validation</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="singleValidationForm">
+                                <div class="mb-3">
+                                    <label for="cardNumber" class="form-label">Card Number</label>
+                                    <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="expiryDate" class="form-label">Expiry Date</label>
+                                            <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="cvv" class="form-label">CVV</label>
+                                            <input type="text" class="form-control" id="cvv" placeholder="123">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cardholderName" class="form-label">Cardholder Name</label>
+                                    <input type="text" class="form-control" id="cardholderName" placeholder="John Doe">
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-circle"></i> Validate Card
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-list-check"></i> Validation Results</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="validationResults">
+                                <div class="text-center text-muted">
+                                    <i class="bi bi-credit-card fs-1"></i>
+                                    <p>Enter card details to validate</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Batch Validation -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-collection"></i> Batch Validation</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="batchValidationForm">
+                                <div class="mb-3">
+                                    <label for="batchCards" class="form-label">Card Data (JSON format)</label>
+                                    <textarea class="form-control" id="batchCards" rows="6" placeholder='[{"card_number": "1234567890123456", "expiry_date": "12/25", "cvv": "123"}, ...]'></textarea>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="bi bi-play-circle"></i> Validate Batch
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards Page -->
+        <div id="cardsPage" class="page-content" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <h2><i class="bi bi-credit-card-2-front"></i> Card Management</h2>
+                    <hr>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="cardTypeFilter" class="form-label">Card Type</label>
+                                    <select class="form-select" id="cardTypeFilter">
+                                        <option value="">All Types</option>
+                                        <option value="visa">Visa</option>
+                                        <option value="mastercard">Mastercard</option>
+                                        <option value="amex">American Express</option>
+                                        <option value="discover">Discover</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="statusFilter" class="form-label">Status</label>
+                                    <select class="form-select" id="statusFilter">
+                                        <option value="">All Status</option>
+                                        <option value="valid">Valid</option>
+                                        <option value="invalid">Invalid</option>
+                                        <option value="pending">Pending</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="searchFilter" class="form-label">Search</label>
+                                    <input type="text" class="form-control" id="searchFilter" placeholder="Search cards...">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">&nbsp;</label>
+                                    <div class="d-grid">
+                                        <button class="btn btn-primary" id="applyFilters">
+                                            <i class="bi bi-funnel"></i> Apply Filters
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards List -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5><i class="bi bi-list"></i> Cards</h5>
+                            <div>
+                                <button class="btn btn-success btn-sm me-2" id="exportCards">
+                                    <i class="bi bi-download"></i> Export
+                                </button>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addCardModal">
+                                    <i class="bi bi-plus"></i> Add Card
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="cardsList">
+                                <!-- Cards will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Jobs Page -->
+        <div id="jobsPage" class="page-content" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <h2><i class="bi bi-list-task"></i> Job Management</h2>
+                    <hr>
+                </div>
+            </div>
+
+            <!-- Job Stats -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body text-center">
+                            <h4 id="totalJobs">0</h4>
+                            <p class="mb-0">Total Jobs</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body text-center">
+                            <h4 id="completedJobs">0</h4>
+                            <p class="mb-0">Completed</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body text-center">
+                            <h4 id="runningJobs">0</h4>
+                            <p class="mb-0">Running</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-danger text-white">
+                        <div class="card-body text-center">
+                            <h4 id="failedJobs">0</h4>
+                            <p class="mb-0">Failed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jobs List -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-list"></i> Jobs</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="jobsList">
+                                <!-- Jobs will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Page -->
+        <div id="usersPage" class="page-content" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <h2><i class="bi bi-people"></i> User Management</h2>
+                    <hr>
+                </div>
+            </div>
+
+            <!-- User Stats -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body text-center">
+                            <h4 id="totalUsers">0</h4>
+                            <p class="mb-0">Total Users</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body text-center">
+                            <h4 id="activeUsers">0</h4>
+                            <p class="mb-0">Active Users</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body text-center">
+                            <h4 id="verifiedUsers">0</h4>
+                            <p class="mb-0">Verified Users</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body text-center">
+                            <h4 id="adminUsers">0</h4>
+                            <p class="mb-0">Admin Users</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users List -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5><i class="bi bi-list"></i> Users</h5>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                                <i class="bi bi-person-plus"></i> Add User
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="usersList">
+                                <!-- Users will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- Create Job Modal -->
+    <div class="modal fade" id="createJobModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Scraping Job</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createJobForm">
+                        <div class="mb-3">
+                            <label for="jobName" class="form-label">Job Name</label>
+                            <input type="text" class="form-control" id="jobName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jobDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="jobDescription" rows="3"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="jobType" class="form-label">Job Type</label>
+                                    <select class="form-select" id="jobType" required>
+                                        <option value="visa">Visa Cards</option>
+                                        <option value="debit">Debit Cards</option>
+                                        <option value="credit">Credit Cards</option>
+                                        <option value="all">All Cards</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="jobPriority" class="form-label">Priority</label>
+                                    <select class="form-select" id="jobPriority">
+                                        <option value="low">Low</option>
+                                        <option value="normal" selected>Normal</option>
+                                        <option value="high">High</option>
+                                        <option value="urgent">Urgent</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jobUrls" class="form-label">Target URLs (one per line)</label>
+                            <textarea class="form-control" id="jobUrls" rows="4" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="createJobBtn">Create Job</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Card Modal -->
+    <div class="modal fade" id="addCardModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Card</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCardForm">
+                        <div class="mb-3">
+                            <label for="addCardNumber" class="form-label">Card Number</label>
+                            <input type="text" class="form-control" id="addCardNumber" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="addExpiryDate" class="form-label">Expiry Date</label>
+                                    <input type="text" class="form-control" id="addExpiryDate" placeholder="MM/YY">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="addCvv" class="form-label">CVV</label>
+                                    <input type="text" class="form-control" id="addCvv" placeholder="123">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="addCardholderName" class="form-label">Cardholder Name</label>
+                            <input type="text" class="form-control" id="addCardholderName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="addBankName" class="form-label">Bank Name</label>
+                            <input type="text" class="form-control" id="addBankName">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="addCardBtn">Add Card</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addUserForm">
+                        <div class="mb-3">
+                            <label for="addUsername" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="addUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="addEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="addEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="addPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="addPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="addRole" class="form-label">Role</label>
+                            <select class="form-select" id="addRole">
+                                <option value="user">User</option>
+                                <option value="scraper">Scraper</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="addUserBtn">Add User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-overlay" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <!-- Toasts will be added here dynamically -->
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/app.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/scraping.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/cards.js"></script>
+    <script src="js/jobs.js"></script>
+    <script src="js/users.js"></script>
+</body>
+</html>
