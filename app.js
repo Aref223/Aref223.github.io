@@ -203,8 +203,8 @@ function resizeCanvas() {
   state.highResCanvas = hr;
 
   // Display canvas at lower resolution for speed
-  canvas.width  = Math.round(fitW  * (window.devicePixelRatio || 1));
-  canvas.height = Math.round(fitH  * (window.devicePixelRatio || 1));
+  canvas.width  = Math.round(fitW * (window.devicePixelRatio || 1));
+  canvas.height = Math.round(fitH * (window.devicePixelRatio || 1));
 }
 
 // ── Render Ad ────────────────────────────────────────────────
