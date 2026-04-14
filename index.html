@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AdCraft AI — Professional Ad Creator</title>
+  <meta name="description" content="Create professional, realistic ads that look like they cost millions to produce. Powered by AI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Syne:wght@400;600;700;800&display=swap" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── HEADER ────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-icon">⚡</span>
+        <span class="brand-name">AdCraft <em>AI</em></span>
+      </div>
+      <nav class="header-nav">
+        <button class="nav-btn active" id="navCreate">Create</button>
+        <button class="nav-btn" id="navSaved">Saved Ads</button>
+        <button class="nav-btn" id="navSettings">API Key</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── MAIN ─────────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- LEFT PANEL: Form -->
+    <aside class="panel panel-form" id="panelForm">
+      <div class="panel-title">
+        <span class="step-badge">1</span> Your Brand &amp; Product
+      </div>
+
+      <!-- Brand Details -->
+      <div class="form-section">
+        <h3 class="form-section-label">Brand</h3>
+        <div class="field-group">
+          <label>Brand Name</label>
+          <input type="text" id="brandName" placeholder="e.g. Nike, Tesla, Glow Co." />
+        </div>
+        <div class="field-group">
+          <label>Tagline <span class="optional">(optional)</span></label>
+          <input type="text" id="brandTagline" placeholder="e.g. Just Do It" />
+        </div>
+        <div class="field-group">
+          <label>Brand Colors</label>
+          <div class="color-row">
+            <div class="color-field">
+              <label class="color-label">Primary</label>
+              <input type="color" id="color1" value="#7c3aed" />
+            </div>
+            <div class="color-field">
+              <label class="color-label">Secondary</label>
+              <input type="color" id="color2" value="#0f0f1a" />
+            </div>
+            <div class="color-field">
+              <label class="color-label">Accent</label>
+              <input type="color" id="colorAccent" value="#f0c040" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Details -->
+      <div class="panel-title" style="margin-top:24px;">
+        <span class="step-badge">2</span> Product / Service
+      </div>
+      <div class="form-section">
+        <div class="field-group">
+          <label>Product or Service Name</label>
+          <input type="text" id="productName" placeholder="e.g. AeroMax Pro Running Shoes" />
+        </div>
+        <div class="field-group">
+          <label>Key Benefit / Value Prop</label>
+          <input type="text" id="keyBenefit" placeholder="e.g. 40% lighter than competitors" />
+        </div>
+        <div class="field-group">
+          <label>Short Description <span class="optional">(optional)</span></label>
+          <textarea id="productDesc" rows="2" placeholder="Extra context for better AI results…"></textarea>
+        </div>
+        <div class="field-group">
+          <label>Target Audience</label>
+          <input type="text" id="targetAudience" placeholder="e.g. Women 25–40 who love fitness" />
+        </div>
+      </div>
+
+      <!-- Ad Settings -->
+      <div class="panel-title" style="margin-top:24px;">
+        <span class="step-badge">3</span> Ad Settings
+      </div>
+      <div class="form-section">
+        <div class="two-col">
+          <div class="field-group">
+            <label>Tone</label>
+            <select id="tone">
+              <option value="luxury">✨ Luxury</option>
+              <option value="bold" selected>💥 Bold &amp; Energetic</option>
+              <option value="professional">💼 Professional</option>
+              <option value="playful">🎉 Playful</option>
+              <option value="emotional">❤️ Emotional</option>
+              <option value="tech">🤖 Tech / Futuristic</option>
+              <option value="minimalist">🤍 Minimalist</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>Platform</label>
+            <select id="platform">
+              <option value="Instagram Post">Instagram Post</option>
+              <option value="Instagram Story">Instagram Story</option>
+              <option value="Facebook Feed">Facebook Feed</option>
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="Twitter / X">Twitter / X</option>
+              <option value="Pinterest">Pinterest</option>
+              <option value="TikTok">TikTok</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>Ad Format</label>
+          <div class="format-pills" id="formatPills">
+            <button class="pill active" data-format="square">Square 1:1</button>
+            <button class="pill" data-format="portrait">Portrait 4:5</button>
+            <button class="pill" data-format="story">Story 9:16</button>
+            <button class="pill" data-format="landscape">Landscape 16:9</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generate -->
+      <div class="generate-section">
+        <button class="btn-generate" id="btnGenerate">
+          <span class="btn-icon">✦</span>
+          Generate with AI
+        </button>
+        <p class="ai-note">Requires an <a href="#" id="linkApiKey">OpenAI API key</a></p>
+        <button class="btn-manual" id="btnManual">Or write copy manually →</button>
+      </div>
+    </aside>
+
+    <!-- RIGHT PANEL: Preview -->
+    <section class="panel panel-preview" id="panelPreview">
+
+      <!-- Template Selector -->
+      <div class="template-bar">
+        <span class="template-bar-label">Template</span>
+        <div class="template-thumbs" id="templateThumbs">
+          <button class="tmpl-btn active" data-template="luxury" title="Luxury Dark">
+            <span class="tmpl-icon">◆</span> Luxury
+          </button>
+          <button class="tmpl-btn" data-template="bold" title="Bold Modern">
+            <span class="tmpl-icon">▲</span> Bold
+          </button>
+          <button class="tmpl-btn" data-template="minimal" title="Clean Minimal">
+            <span class="tmpl-icon">○</span> Minimal
+          </button>
+          <button class="tmpl-btn" data-template="tech" title="Tech / Dark">
+            <span class="tmpl-icon">⬡</span> Tech
+          </button>
+          <button class="tmpl-btn" data-template="lifestyle" title="Lifestyle Warm">
+            <span class="tmpl-icon">❋</span> Lifestyle
+          </button>
+          <button class="tmpl-btn" data-template="corporate" title="Corporate / B2B">
+            <span class="tmpl-icon">▣</span> Corporate
+          </button>
+        </div>
+      </div>
+
+      <!-- Canvas Preview -->
+      <div class="canvas-wrap" id="canvasWrap">
+        <canvas id="adCanvas"></canvas>
+        <div class="canvas-loading hidden" id="canvasLoading">
+          <div class="spinner"></div>
+          <p>Generating…</p>
+        </div>
+      </div>
+
+      <!-- Variation selector (shown after AI generation) -->
+      <div class="variation-bar hidden" id="variationBar">
+        <span class="variation-label">Variation</span>
+        <div class="variation-dots" id="variationDots"></div>
+      </div>
+
+      <!-- Editable Copy -->
+      <div class="copy-editor" id="copyEditor">
+        <div class="copy-row">
+          <label>Headline</label>
+          <input type="text" id="editHeadline" placeholder="Your punchy headline…" />
+        </div>
+        <div class="copy-row">
+          <label>Subheadline</label>
+          <input type="text" id="editSub" placeholder="Supporting message…" />
+        </div>
+        <div class="copy-row">
+          <label>Body Copy</label>
+          <textarea id="editBody" rows="2" placeholder="Short compelling paragraph…"></textarea>
+        </div>
+        <div class="copy-row two-col">
+          <div>
+            <label>CTA</label>
+            <input type="text" id="editCTA" placeholder="Shop Now" />
+          </div>
+          <div>
+            <label>Hashtags</label>
+            <input type="text" id="editHashtags" placeholder="#brand #product" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-bar">
+        <button class="btn-action btn-download" id="btnDownload">
+          ⬇ Download PNG
+        </button>
+        <button class="btn-action btn-copy" id="btnCopyText">
+          📋 Copy Text
+        </button>
+        <button class="btn-action btn-save" id="btnSave">
+          🔖 Save Ad
+        </button>
+        <div class="resolution-hint">Full-res on download</div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- ── API KEY MODAL ─────────────────────────────────────── -->
+  <div class="modal-overlay hidden" id="modalApiKey">
+    <div class="modal">
+      <button class="modal-close" id="modalClose">✕</button>
+      <h2>OpenAI API Key</h2>
+      <p>Your key is stored only in your browser and sent directly to OpenAI. It is never shared.</p>
+      <div class="field-group" style="margin-top:16px;">
+        <label>API Key</label>
+        <input type="password" id="apiKeyInput" placeholder="sk-proj-…" />
+      </div>
+      <button class="btn-generate" id="btnSaveKey" style="margin-top:16px;width:100%;">Save Key</button>
+      <p class="api-help">Don't have a key? <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">Get one free at OpenAI →</a></p>
+    </div>
+  </div>
+
+  <!-- ── SAVED ADS MODAL ───────────────────────────────────── -->
+  <div class="modal-overlay hidden" id="modalSaved">
+    <div class="modal modal-wide">
+      <button class="modal-close" id="modalSavedClose">✕</button>
+      <h2>Saved Ads</h2>
+      <div class="saved-grid" id="savedGrid">
+        <p class="empty-msg">No saved ads yet. Create one and click Save Ad.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOAST ─────────────────────────────────────────────── -->
+  <div class="toast hidden" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
