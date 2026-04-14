@@ -146,7 +146,7 @@ function setupListeners() {
   $('btnSaveKey').addEventListener('click', () => {
     const key = $('apiKeyInput').value.trim();
     if (key) {
-      localStorage.setItem('adcraft_apikey', key);
+      localStorage.setItem('adcraft_apikey', btoa(key));
       closeModal('modalApiKey');
       showToast('API key saved ✓');
     } else {
@@ -155,7 +155,7 @@ function setupListeners() {
   });
   // Pre-fill key input
   const stored = localStorage.getItem('adcraft_apikey') || '';
-  if (stored) $('apiKeyInput').value = stored;
+  if (stored) $('apiKeyInput').value = atob(stored);
 
   // Saved ads
   $('navSaved').addEventListener('click', openSaved);
@@ -291,9 +291,7 @@ function drawLuxury(ctx, W, H, d) {
   setFont(ctx, 300, W * .022, 'Inter, sans-serif');
   ctx.fillStyle = hexToRGBA(d.accent, .8);
   ctx.textAlign = 'center';
-  ctx.letterSpacing = '0.25em';
-  ctx.fillText(d.brand.toUpperCase(), W / 2, lineY * 2.2);
-  ctx.letterSpacing = '0';
+  spacedFillText(ctx, d.brand.toUpperCase(), W / 2, lineY * 2.2, W * .0055);
 
   // Large headline
   const hlSize = W * .085;
@@ -317,9 +315,7 @@ function drawLuxury(ctx, W, H, d) {
   setFont(ctx, 300, W * .032, 'Inter, sans-serif');
   ctx.fillStyle = hexToRGBA('#ffffff', .6);
   ctx.textAlign = 'center';
-  ctx.letterSpacing = '0.08em';
-  ctx.fillText(d.subheadline, W / 2, divY + H * .07);
-  ctx.letterSpacing = '0';
+  spacedFillText(ctx, d.subheadline, W / 2, divY + H * .07, W * .00256);
 
   // CTA Button
   drawCTAButton(ctx, W / 2, H * .74, d.cta, d.accent, '#000', W);
@@ -333,9 +329,7 @@ function drawLuxury(ctx, W, H, d) {
     setFont(ctx, 300, W * .018, 'Inter, sans-serif');
     ctx.fillStyle = hexToRGBA('#ffffff', .3);
     ctx.textAlign = 'center';
-    ctx.letterSpacing = '0.15em';
-    ctx.fillText((d.tagline || d.hashtags.split(' ')[0] || '').toUpperCase(), W / 2, btmY + H * .04);
-    ctx.letterSpacing = '0';
+    spacedFillText(ctx, (d.tagline || d.hashtags.split(' ')[0] || '').toUpperCase(), W / 2, btmY + H * .04, W * .0027);
   }
 }
 
@@ -373,9 +367,7 @@ function drawBold(ctx, W, H, d) {
   setFont(ctx, 700, W * .028, 'Space Grotesk, Inter, sans-serif');
   ctx.fillStyle = hexToRGBA('#ffffff', .5);
   ctx.textAlign = 'left';
-  ctx.letterSpacing = '0.2em';
-  ctx.fillText(d.brand.toUpperCase(), W * .08, H * .15);
-  ctx.letterSpacing = '0';
+  spacedFillText(ctx, d.brand.toUpperCase(), W * .08, H * .15, W * .0056);
 
   // Large headline
   const hlSize = W * .095;
@@ -427,9 +419,7 @@ function drawMinimal(ctx, W, H, d) {
   setFont(ctx, 600, W * .025, 'DM Sans, Inter, sans-serif');
   ctx.fillStyle = '#ffffff';
   ctx.textAlign = 'center';
-  ctx.letterSpacing = '0.18em';
-  ctx.fillText(d.brand.toUpperCase(), W / 2, H * .055);
-  ctx.letterSpacing = '0';
+  spacedFillText(ctx, d.brand.toUpperCase(), W / 2, H * .055, W * .0045);
 
   // Large headline
   const hlSize = W * .088;
@@ -514,9 +504,7 @@ function drawTech(ctx, W, H, d) {
   setFont(ctx, 600, W * .022, 'Syne, Inter, sans-serif');
   ctx.fillStyle = d.color1;
   ctx.textAlign = 'left';
-  ctx.letterSpacing = '0.25em';
-  ctx.fillText(d.brand.toUpperCase(), W * .08, H * .14);
-  ctx.letterSpacing = '0';
+  spacedFillText(ctx, d.brand.toUpperCase(), W * .08, H * .14, W * .0055);
 
   // Version / platform label
   setFont(ctx, 400, W * .018, 'Inter, sans-serif');
@@ -609,9 +597,7 @@ function drawLifestyle(ctx, W, H, d) {
   setFont(ctx, 700, W * .026, 'DM Sans, Inter, sans-serif');
   ctx.fillStyle = hexToRGBA('#ffffff', .9);
   ctx.textAlign = 'center';
-  ctx.letterSpacing = '0.15em';
-  ctx.fillText(d.brand.toUpperCase(), W / 2, H * .22);
-  ctx.letterSpacing = '0';
+  spacedFillText(ctx, d.brand.toUpperCase(), W / 2, H * .22, W * .0039);
 
   // Accent dot brand decoration
   ctx.beginPath();
@@ -693,9 +679,7 @@ function drawCorporate(ctx, W, H, d) {
   setFont(ctx, 700, W * .028, 'Inter, sans-serif');
   ctx.fillStyle = hexToRGBA('#ffffff', .85);
   ctx.textAlign = 'center';
-  ctx.letterSpacing = '0.12em';
-  ctx.fillText(d.brand.toUpperCase(), colW * .42, H * .12);
-  ctx.letterSpacing = '0';
+  spacedFillText(ctx, d.brand.toUpperCase(), colW * .42, H * .12, W * .00336);
 
   // Left stat / accent number
   setFont(ctx, 800, W * .16, 'Inter, sans-serif');
@@ -707,10 +691,8 @@ function drawCorporate(ctx, W, H, d) {
   setFont(ctx, 300, W * .022, 'Inter, sans-serif');
   ctx.fillStyle = hexToRGBA('#ffffff', .65);
   ctx.textAlign = 'center';
-  ctx.letterSpacing = '0.08em';
   const tl = d.tagline || d.subheadline;
   wrapTextCenter(ctx, tl, colW * .42, H * .75, colW * .7, W * .03);
-  ctx.letterSpacing = '0';
 
   // Right side content
   const rx = colW + W * .1;
@@ -720,9 +702,7 @@ function drawCorporate(ctx, W, H, d) {
   setFont(ctx, 600, W * .018, 'Inter, sans-serif');
   ctx.fillStyle = d.color1;
   ctx.textAlign = 'left';
-  ctx.letterSpacing = '0.15em';
-  ctx.fillText('NEW RELEASE', rx, H * .14);
-  ctx.letterSpacing = '0';
+  spacedFillText(ctx, 'NEW RELEASE', rx, H * .14, W * .0027);
 
   // Headline
   const hlSize = W * .072;
@@ -800,6 +780,26 @@ function breakLines(ctx, text, maxW) {
   return lines;
 }
 
+// Renders text with manual per-character spacing (Canvas 2D letterSpacing is not
+// available in all environments; this works everywhere).
+function spacedFillText(ctx, text, x, y, spacing) {
+  if (!text) return;
+  const chars = text.split('');
+  const charWidths = chars.map(c => ctx.measureText(c).width);
+  const totalWidth = charWidths.reduce((s, w) => s + w, 0) + spacing * (chars.length - 1);
+  const align = ctx.textAlign;
+  let cx = x;
+  if (align === 'center') cx = x - totalWidth / 2;
+  else if (align === 'right') cx = x - totalWidth;
+  ctx.save();
+  ctx.textAlign = 'left';
+  chars.forEach((c, i) => {
+    ctx.fillText(c, cx, y);
+    cx += charWidths[i] + spacing;
+  });
+  ctx.restore();
+}
+
 function drawLine(ctx, x1, y1, x2, y2, color, width, alpha = 1) {
   ctx.save();
   ctx.globalAlpha = alpha;
@@ -819,7 +819,7 @@ function drawCTAButton(ctx, cx, cy, text, bg, fg, W, align = 'center') {
   setFont(ctx, 600, W * .028, 'Inter, sans-serif');
   const tw   = ctx.measureText(text).width;
   const bw   = tw + pad * 2;
-  const bx   = align === 'left' ? cx - bw / 2 : cx - bw / 2;
+  const bx   = align === 'left' ? cx : cx - bw / 2;
   const by   = cy - h / 2;
 
   ctx.fillStyle = bg;
@@ -926,7 +926,8 @@ function blendColors(hex1, hex2, t) {
 // ── AI Generation ─────────────────────────────────────────────
 
 async function handleGenerate() {
-  const apiKey = localStorage.getItem('adcraft_apikey');
+  const raw    = localStorage.getItem('adcraft_apikey');
+  const apiKey = raw ? atob(raw) : null;
   if (!apiKey) {
     openModal('modalApiKey');
     showToast('Add your OpenAI API key first');
